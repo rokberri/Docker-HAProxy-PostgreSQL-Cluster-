@@ -1,2 +1,24 @@
-etcdctl --endpoints="http://10.10.0.6:2379,http://10.10.0.7:2379,http://10.10.0.8:2379" endpoint status --write-out=table
-/opt/venv/bin/patronictl list
+Точка входа в кластер 10.10.0.100
+
+Кластер postgresql под управлением patroni:
+| Member    | Host      |
++-----------+-----------+
+| postgres1 | 10.10.0.3 |
+| postgres2 | 10.10.0.4 |
++-----------+-----------+
+
+Кластер etcd:
++-----------------------+-----------+
+|       ENDPOINT        | IS LEADER |
++-----------------------+-----------+
+| http://10.10.0.6:2379 |      true |
+| http://10.10.0.7:2379 |     false |
+| http://10.10.0.8:2379 |     false |
++-----------------------+-----------+
+
+Кластер HAProxy+keepalived:
+| Member             | Host      |
++--------------------+-----------+
+| haproxy-keepalive1 | 10.10.0.3 |
+| haproxy-keepalive2 | 10.10.0.4 |
++--------------------+-----------+

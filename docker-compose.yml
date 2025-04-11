@@ -10,8 +10,6 @@ services:
     networks:
       cluster_network:
         ipv4_address: 10.10.0.6
-    # volumes:
-    #   - etcd1_data:/etcd-data
 
   etcd2:
     image: quay.io/coreos/etcd:v3.5.4
@@ -22,8 +20,7 @@ services:
     networks:
       cluster_network:
         ipv4_address: 10.10.0.7
-    # volumes:
-    #   - etcd1_data:/etcd-data
+
   etcd3:
     image: quay.io/coreos/etcd:v3.5.4
     container_name: etcd3
@@ -43,10 +40,6 @@ services:
       env_file:
         - ./PostgreSQL+Patroni/postgres.env
         - ./PostgreSQL+Patroni/patroni1.env
-      # environment:
-      #   POSTGRES_USER: ${POSTGRES_USER:-postgres} 
-      #   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      #   POSTGRES_DB: ${POSTGRES_DB:-postgres}
       ports:
       - "5432:5432"
       depends_on:
@@ -67,17 +60,9 @@ services:
       container_name: postgresdb2
       hostname: postgresdb2
       restart: on-failure:5
-      # volumes:
-      #   - db_data:/var/lib/postgresql/data
       env_file:
         - ./PostgreSQL+Patroni/postgres.env
         - ./PostgreSQL+Patroni/patroni2.env
-      # environment:
-      #   POSTGRES_USER: ${POSTGRES_USER:-postgres} 
-      #   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      #   POSTGRES_DB: ${POSTGRES_DB:-postgres}
-      # ports:
-      # - "5432:5432"
       depends_on:
       - etcd1
       - etcd2
@@ -94,6 +79,7 @@ services:
 
   haproxy-keepalive1:
     image: haproxy-keepalive-master:cluster
+    hostname: haproxy-keepalive1
     cap_add:
       - NET_ADMIN      
       - NET_BROADCAST   
@@ -103,6 +89,7 @@ services:
           ipv4_address: 10.10.0.2
   haproxy-keepalive2:
     image: haproxy-keepalive-bkp:cluster
+    hostname: haproxy-keepalive2
     cap_add:
     - NET_ADMIN      
     - NET_BROADCAST   
@@ -110,24 +97,8 @@ services:
     networks:
       cluster_network:
           ipv4_address: 10.10.0.5
-  # haproxy:
-  #   image: haproxy:latest
-  #   container_name: haproxy
-  #   hostname: haproxy
-  #   volumes:
-  #     - ./haproxy:/usr/local/etc/haproxy
-  #   ports:
-  #     - 5000:5000 
-  #     - 5001:5001
-  #     - 5002:5002 
-  #   networks:
-  #     cluster_network:
-  #         ipv4_address: 10.10.0.2
-    # volumes:
-    #   - etcd1_data:/etcd-data
   
-  
-    
+
   # dataset-generator:
   #   image: a830bfe8b139
   #   depends_on:
