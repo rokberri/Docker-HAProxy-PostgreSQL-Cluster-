@@ -1,0 +1,25 @@
+scope: test-postgres-cluster
+name: postgres2
+
+restapi:
+  listen: 0.0.0.0:8008  # Адрес и порт для API
+  connect_address: 10.10.0.4:8008  # Адрес для подключения к API
+
+etcd:
+  hosts:
+    - "10.10.0.6:2379"
+    - "10.10.0.7:2379"
+    - "10.10.0.8:2379"
+
+postgresql:
+  data_dir: /var/lib/postgresql/data/pgdata
+  listen: 0.0.0.0:5432
+  use_pg_rewind: true
+  connect_address: 10.10.0.4:5432
+  authentication:
+    replication:
+      username: replicator
+      password: "12345"
+    superuser:
+      username: postgres
+      password: "postgres"

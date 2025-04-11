@@ -1,0 +1,22 @@
+# postresql-patroni:slave
+FROM postgres:14
+
+
+RUN apt update \
+    && apt install -y --no-install-recommends \
+    patroni \
+    python3-psycopg2 \
+    && apt clean \
+    && rm -rf \
+    /var/lib/apt/lists/* \
+    /var/cache/* \
+    && mkdir /var/lib/postgresql -p \
+    && chown postgres:postgres /var/lib/postgresql \
+    && chmod 700 /var/lib/postgresql
+
+COPY patroni_slave.yml /etc/patroni/patroni.yml
+
+USER postgres
+
+ENTRYPOINT ["/usr/bin/patroni"]
+CMD [ "/etc/patroni/patroni.yml" ]

@@ -1,0 +1,12 @@
+FROM alpine:3.16
+
+RUN apk add --no-cache haproxy keepalived
+
+COPY haproxy.cfg /etc/haproxy/haproxy.cfg
+COPY keepalive_bkp.conf /etc/keepalived/keepalived.conf
+COPY entrypoint.sh /entrypoint.sh
+
+
+EXPOSE 5432 8404
+
+ENTRYPOINT ["/entrypoint.sh"]
